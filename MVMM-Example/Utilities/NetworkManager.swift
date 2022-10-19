@@ -1,0 +1,40 @@
+//
+//  NetworkManager.swift
+//  MVMM-Example
+//
+//  Created by Enes Sancar on 14.10.2022.
+
+import Foundation
+
+class NetworkManager {
+    
+    static let shared = NetworkManager()
+    private init() {}
+    
+    @discardableResult
+    func downlaoad(url : URL , completion : @escaping (Result<Data, Error >) -> ()) -> URLSessionDataTask {
+        
+        let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print(error.localizedDescription)
+                completion(.failure(error))
+                return
+            }
+            guard
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200 else {
+                    
+                    completion(.failure(URLError(.badServerResponse)))
+                    return
+                }
+            
+            guard let data = data else {
+                completion(.failure(URLError(.badURL)))
+                return
+            }
+            completion(.success(data))
+        }
+        dataTask.resume()
+        return dataTask
+    }
+}
