@@ -15,6 +15,8 @@ struct MovieResult: Decodable {
     let posterPath: String?
     let overview , releaseDate , title : String?
     let originalLanguage: String?
+    let voteAverage: Double?
+    let voteCount: Int?
     
     enum CodingKeys : String , CodingKey {
         case id
@@ -22,6 +24,16 @@ struct MovieResult: Decodable {
         case overview , title
         case releaseDate = "release_date"
         case originalLanguage = "original_language"
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+    }
+    
+    var _voteCount: Int? {
+        voteCount ?? Int.min
+    }
+    
+    var _voteAverage: Double? {
+        voteAverage ?? Double.zero
     }
     
     var _originalLanguage: String {

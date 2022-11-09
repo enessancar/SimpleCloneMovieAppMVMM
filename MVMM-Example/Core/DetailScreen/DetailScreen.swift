@@ -15,6 +15,8 @@ protocol DetailScreenInterface: AnyObject {
     func configureDateLabel()
     func configureOverviewLabel()
     func configureLanguageLabel()
+    func configureVoteAverageLabel()
+    func configureVoteCountLabel()
 }
 
 final class DetailScreen: UIViewController {
@@ -29,6 +31,8 @@ final class DetailScreen: UIViewController {
     private var dateLabel: UILabel!
     private var overviewLabel: UILabel!
     private var originalLanguageLabel: UILabel!
+    private var voteAverage: UILabel!
+    private var voteCountLabel: UILabel!
     
     init(movie: MovieResult) {
         self.movie = movie
@@ -38,19 +42,53 @@ final class DetailScreen: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         viewModel.view = self
         viewModel.viewDidload()
     }
 }
 
 extension DetailScreen: DetailScreenInterface {
- 
+    
     func configureVC() {
         view.backgroundColor = .systemBackground
+    }
+    
+    func configureVoteCountLabel() {
+        voteCountLabel = UILabel(frame: .zero)
+        view.addSubview(voteCountLabel)
+        voteCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        voteCountLabel.text = String("Vote count: \(movie._voteCount!)")
+        voteCountLabel.font = .boldSystemFont(ofSize: 15)
+        voteCountLabel.textColor = .secondaryLabel
+        
+        NSLayoutConstraint.activate([
+            voteCountLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            voteCountLabel.topAnchor.constraint(equalTo: originalLanguageLabel.bottomAnchor ,  constant: padding),
+            voteCountLabel.leadingAnchor.constraint(equalTo: originalLanguageLabel.leadingAnchor)
+        ])
+    }
+    
+    func configureVoteAverageLabel() {
+        
+        voteAverage = UILabel(frame: .zero)
+        view.addSubview(voteAverage)
+        voteAverage.translatesAutoresizingMaskIntoConstraints = false
+        
+        voteAverage.text = String("Vote Average: \(movie._voteAverage!)")
+        voteAverage.font = .boldSystemFont(ofSize: 15)
+        voteAverage.textColor = .secondaryLabel
+        
+        NSLayoutConstraint.activate([
+            voteAverage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            voteAverage.topAnchor.constraint(equalTo: originalLanguageLabel.bottomAnchor , constant:  3 * padding),
+            voteAverage.leadingAnchor.constraint(equalTo: originalLanguageLabel.leadingAnchor)
+        ])
+        
     }
     
     func configurePosterImageView() {
@@ -105,7 +143,7 @@ extension DetailScreen: DetailScreenInterface {
         dateLabel.textColor = .secondaryLabel
         
         NSLayoutConstraint.activate([
-            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 3 * padding),
+            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2 * padding),
             dateLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             dateLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
         ])
@@ -138,9 +176,10 @@ extension DetailScreen: DetailScreenInterface {
         originalLanguageLabel.text = "Original Language : \(movie._originalLanguage)"
         originalLanguageLabel.font = .boldSystemFont(ofSize: 15.5)
         originalLanguageLabel.numberOfLines = 0
+        originalLanguageLabel.textColor = .secondaryLabel
         
         NSLayoutConstraint.activate([
-            originalLanguageLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor , constant: 2 * padding),
+            originalLanguageLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor , constant: 15),
             originalLanguageLabel.leadingAnchor.constraint(equalTo: dateLabel.leadingAnchor),
             originalLanguageLabel.trailingAnchor.constraint(equalTo: dateLabel.trailingAnchor)
         ])

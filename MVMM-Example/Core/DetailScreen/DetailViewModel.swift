@@ -26,6 +26,8 @@ extension DetailViewModel: DetailViewModelInterface {
         view?.configureDateLabel()
         view?.configureOverviewLabel()
         view?.configureLanguageLabel()
+        view?.configureVoteAverageLabel()
+        view?.configureVoteCountLabel()
     }
 }
 // filmin değerlendirme yada farklı bi özellik ekle urlden bakıp neleri taşıyosa eklemeye çalış
